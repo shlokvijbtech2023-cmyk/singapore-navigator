@@ -67,21 +67,6 @@ export default {
         display: ['"Plus Jakarta Sans"', 'system-ui', 'sans-serif'],
         sans: ['Inter', 'system-ui', 'sans-serif'],
       },
-      colors: {
-        mrt: {
-          purple: "hsl(var(--mrt-purple))",
-          yellow: "hsl(var(--mrt-yellow))",
-          red: "hsl(var(--mrt-red))",
-          blue: "hsl(var(--mrt-blue))",
-          green: "hsl(var(--mrt-green))",
-          monorail: "hsl(var(--mrt-monorail))",
-          bus: "hsl(var(--mrt-bus))",
-        },
-        highlight: {
-          DEFAULT: "hsl(var(--highlight))",
-          glow: "hsl(var(--highlight-glow))",
-        },
-      },
       keyframes: {
         "accordion-down": { from: { height: "0" }, to: { height: "var(--radix-accordion-content-height)" } },
         "accordion-up": { from: { height: "var(--radix-accordion-content-height)" }, to: { height: "0" } },
