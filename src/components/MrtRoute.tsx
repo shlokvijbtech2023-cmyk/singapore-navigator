@@ -1,6 +1,7 @@
 import { ArrowDown, Footprints, TrainFront, Bus, Repeat } from "lucide-react";
 import { TransitLeg, MrtLine, LINE_META } from "@/data/itinerary";
 import { cn } from "@/lib/utils";
+import { DirectionsButton } from "./DirectionsButton";
 
 const lineColorVar: Record<MrtLine, string> = {
   purple: "var(--mrt-purple)",
