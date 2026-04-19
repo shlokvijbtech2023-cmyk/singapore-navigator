@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { TimelineItem } from "@/data/itinerary";
 import { MrtRoute } from "./MrtRoute";
+import { DirectionsButton } from "./DirectionsButton";
 import { cn } from "@/lib/utils";
 import {
   Train, Sparkles, Utensils, Trees, ShoppingBag, BedDouble,
@@ -64,6 +65,11 @@ export function TimelineCard({ item, showTransit }: { item: TimelineItem; showTr
             </h4>
             {item.description && (
               <p className="mt-1 text-sm text-muted-foreground leading-relaxed">{item.description}</p>
+            )}
+            {!hasTransit && (
+              <div className="mt-2">
+                <DirectionsButton destination={item.title} label="Get directions" size="sm" />
+              </div>
             )}
           </div>
           {hasTransit && showTransit && (
