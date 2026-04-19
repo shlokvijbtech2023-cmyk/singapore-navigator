@@ -36,7 +36,7 @@ function StationNode({ name, interchange }: { name: string; interchange?: boolea
           )}
         />
       </div>
-      <div className="flex items-center gap-2">
+      <div className="flex items-center gap-2 flex-wrap">
         <span className="font-display font-semibold text-sm md:text-base text-foreground">
           {name}
         </span>
@@ -45,6 +45,7 @@ function StationNode({ name, interchange }: { name: string; interchange?: boolea
             <Repeat className="w-2.5 h-2.5" /> Interchange
           </span>
         )}
+        <DirectionsButton destination={name} />
       </div>
     </div>
   );
