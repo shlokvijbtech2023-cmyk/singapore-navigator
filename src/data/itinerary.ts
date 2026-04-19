@@ -90,7 +90,8 @@ export const DAYS: Day[] = [
             icon: "transport",
             transit: [
               { line: "walk", from: "Lau Pa Sat", to: "Raffles Place MRT", note: "~8–10 min walk" },
-              { line: "purple", from: "Raffles Place", to: "Clarke Quay", direction: "towards HarbourFront", stops: 1 },
+              { line: "red", from: "Raffles Place", to: "Dhoby Ghaut", direction: "towards Jurong East", stops: 1 },
+              { line: "purple", from: "Dhoby Ghaut", to: "Clarke Quay", direction: "towards HarbourFront", stops: 1, interchange: true },
               { line: "walk", from: "Clarke Quay MRT", to: "Hotel", note: "~10 min walk" },
             ],
           },
