@@ -57,6 +57,19 @@ export default {
           border: "hsl(var(--sidebar-border))",
           ring: "hsl(var(--sidebar-ring))",
         },
+        mrt: {
+          purple: "hsl(var(--mrt-purple))",
+          yellow: "hsl(var(--mrt-yellow))",
+          red: "hsl(var(--mrt-red))",
+          blue: "hsl(var(--mrt-blue))",
+          green: "hsl(var(--mrt-green))",
+          monorail: "hsl(var(--mrt-monorail))",
+          bus: "hsl(var(--mrt-bus))",
+        },
+        highlight: {
+          DEFAULT: "hsl(var(--highlight))",
+          glow: "hsl(var(--highlight-glow))",
+        },
       },
       borderRadius: {
         lg: "var(--radius)",
