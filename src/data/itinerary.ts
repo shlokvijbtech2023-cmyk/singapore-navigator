@@ -1,3 +1,9 @@
+import day1Img from "@/assets/day1.jpg";
+import day2Img from "@/assets/day2.jpg";
+import day3Img from "@/assets/day3.jpg";
+import day4Img from "@/assets/day4.jpg";
+import day5Img from "@/assets/day5.jpg";
+
 export type MrtLine = "purple" | "yellow" | "red" | "blue" | "green" | "monorail" | "bus" | "walk";
 
 export const LINE_META: Record<MrtLine, { name: string; short: string }> = {
@@ -29,6 +35,12 @@ export type TimelineItem = {
   highlight?: boolean;
   highlightLabel?: string;
   transit?: TransitLeg[];
+  /** Direct Google Maps URL for the place. */
+  mapsUrl?: string;
+  /** Reminder/alert shown above this card. */
+  reminder?: string;
+  /** Marks an optional/skippable item. */
+  optional?: boolean;
 };
 
 export type Day = {
@@ -36,36 +48,68 @@ export type Day = {
   title: string;
   subtitle: string;
   summary: string;
+  image: string;
   mapEmbed: string;
   sections: { label: string; range: string; items: TimelineItem[] }[];
 };
 
-// Google Maps embed (search-based, no API key needed)
 const mapFor = (q: string) =>
   `https://www.google.com/maps?q=${encodeURIComponent(q)}&output=embed`;
 
 export const DAYS: Day[] = [
   {
     id: 1,
-    title: "Old Town & Marina Magic",
-    subtitle: "Clarke Quay · Chinatown · Gardens by the Bay",
-    summary: "Heritage streets by morning, futuristic light shows by night.",
-    mapEmbed: mapFor("Clarke Quay, Chinatown, Gardens by the Bay Singapore"),
+    title: "Arrival, Jewel & Marina Bay",
+    subtitle: "Jewel Changi · Clarke Quay · Gardens by the Bay",
+    summary: "Land at Jewel, settle in, then chase Singapore's iconic light shows.",
+    image: day1Img,
+    mapEmbed: mapFor("Jewel Changi, Clarke Quay, Gardens by the Bay Singapore"),
     sections: [
       {
-        label: "Morning",
-        range: "8:00 AM – 2:30 PM",
+        label: "Arrival",
+        range: "Early Morning · 1–1.5 hrs",
         items: [
-          { time: "8:00 AM", title: "Leave hotel", description: "Walk ~10 min to Clarke Quay for river views & photos.", icon: "hotel" },
-          { time: "8:45 AM", title: "Walk to Chinatown", description: "Explore temples, street markets & shops (~1.5 hrs).", icon: "nature" },
-          { time: "10:30 AM", title: "Brunch at Annalakshmi", description: "Cheap, soulful Indian vegetarian.", icon: "food" },
-          { time: "11:30 AM", title: "Singapore Riverside Walk", description: "Stroll to Robertson Quay, relax at cafés.", icon: "nature" },
-          { time: "2:30 PM", title: "Return to hotel · check-in & rest", icon: "rest" },
+          {
+            time: "Arrival",
+            title: "Jewel Changi Airport",
+            description: "Rain Vortex · indoor garden · breakfast.",
+            icon: "sparkle",
+            highlight: true,
+            highlightLabel: "Rain Vortex",
+            mapsUrl: "https://maps.google.com/?q=Jewel+Changi+Airport",
+          },
+          {
+            time: "Transfer",
+            title: "Airport → Hotel",
+            icon: "transport",
+            transit: [
+              { line: "green", from: "Changi Airport MRT", to: "Tanah Merah", direction: "towards Tanah Merah", stops: 2 },
+              { line: "green", from: "Tanah Merah", to: "Outram Park", direction: "towards City (Tuas Link)", stops: 6, interchange: true },
+              { line: "walk", from: "Outram Park", to: "Holiday Inn Singapore Atrium", note: "Short walk or bus" },
+            ],
+          },
+          {
+            time: "Check-in",
+            title: "Holiday Inn Singapore Atrium",
+            icon: "hotel",
+            mapsUrl: "https://maps.google.com/?q=Holiday+Inn+Singapore+Atrium",
+          },
+        ],
+      },
+      {
+        label: "Morning",
+        range: "9:30 AM – 2:30 PM",
+        items: [
+          { time: "9:30 AM", title: "Clarke Quay", description: "River views & photos.", icon: "nature", mapsUrl: "https://maps.google.com/?q=Clarke+Quay" },
+          { time: "10:30 AM", title: "Chinatown", description: "Temples, street markets & shops.", icon: "shopping", mapsUrl: "https://maps.google.com/?q=Chinatown+Singapore" },
+          { time: "12:30 PM", title: "Annalakshmi", description: "Soulful Indian vegetarian.", icon: "food", mapsUrl: "https://maps.google.com/?q=Annalakshmi+Singapore" },
+          { time: "1:30 PM", title: "Robertson Quay", description: "Riverside stroll & cafés.", icon: "nature", mapsUrl: "https://maps.google.com/?q=Robertson+Quay" },
+          { time: "2:30 PM", title: "Return to hotel · rest", icon: "rest" },
         ],
       },
       {
         label: "Evening",
-        range: "4:30 PM – 10:30 PM",
+        range: "4:30 PM – 11:00 PM",
         items: [
           {
             time: "4:30 PM",
@@ -78,14 +122,32 @@ export const DAYS: Day[] = [
               { line: "walk", from: "Bayfront MRT", to: "Gardens by the Bay", note: "Follow exit signs" },
             ],
           },
-          { time: "5:00 PM", title: "Cloud Forest", description: "~45 min misty mountain experience.", icon: "nature" },
-          { time: "5:45 PM", title: "Flower Dome", description: "~45 min seasonal blooms.", icon: "nature" },
-          { time: "7:45 PM", title: "Supertree Light Show", description: "Garden Rhapsody at the Supertree Grove — must-watch.", icon: "show", highlight: true, highlightLabel: "Garden Rhapsody" },
-          { time: "8:10 PM", title: "Marina Bay Walk", description: "Gardens → MBS → Helix Bridge → Merlion Park.", icon: "nature" },
-          { time: "9:00 PM", title: "Spectra Light & Water Show", description: "Free outdoor show at Marina Bay Sands.", icon: "show", highlight: true, highlightLabel: "Spectra" },
-          { time: "9:30 PM", title: "Dinner at Lau Pa Sat", description: "Iconic hawker centre — try satay street.", icon: "food" },
+          { time: "5:00 PM", title: "Gardens by the Bay", description: "Cloud Forest + Flower Dome.", icon: "nature", mapsUrl: "https://maps.google.com/?q=Gardens+by+the+Bay" },
           {
-            time: "10:30 PM",
+            time: "7:45 PM",
+            title: "Supertree Light Show",
+            description: "Garden Rhapsody at the Supertree Grove.",
+            icon: "show",
+            highlight: true,
+            highlightLabel: "Garden Rhapsody",
+            reminder: "Arrive by 7:40 PM to grab a good spot for the Supertree Show.",
+            mapsUrl: "https://maps.google.com/?q=Supertree+Grove",
+          },
+          { time: "8:10 PM", title: "Marina Bay Walk", description: "Gardens → MBS → Helix Bridge → Merlion. Visit MBS rooftop.", icon: "nature", mapsUrl: "https://maps.google.com/?q=Marina+Bay+Sands" },
+          {
+            time: "9:00 PM",
+            title: "Spectra Light & Water Show",
+            description: "Free outdoor show at Marina Bay Sands.",
+            icon: "show",
+            highlight: true,
+            highlightLabel: "Spectra",
+            reminder: "Arrive by 8:50 PM for a clear view of Spectra.",
+            mapsUrl: "https://maps.google.com/?q=Marina+Bay+Sands",
+          },
+          { time: "9:30 PM", title: "Lau Pa Sat", description: "Iconic hawker centre — try satay street.", icon: "food", mapsUrl: "https://maps.google.com/?q=Lau+Pa+Sat" },
+          { time: "10:30 PM", title: "Clarke Quay stroll", description: "Optional nightcap by the river.", icon: "nature", optional: true, mapsUrl: "https://maps.google.com/?q=Clarke+Quay" },
+          {
+            time: "11:00 PM",
             title: "Return to hotel",
             icon: "transport",
             transit: [
@@ -103,7 +165,8 @@ export const DAYS: Day[] = [
     id: 2,
     title: "Mandai Wildlife Day",
     subtitle: "Zoo · River Wonders · Bird Paradise · Night Safari",
-    summary: "A full day across Singapore's four wildlife parks, ending with the iconic Night Safari tram.",
+    summary: "A full day across Singapore's wildlife parks, ending with the Night Safari.",
+    image: day2Img,
     mapEmbed: mapFor("Mandai Wildlife Reserve Singapore"),
     sections: [
       {
@@ -112,22 +175,28 @@ export const DAYS: Day[] = [
         items: [
           {
             time: "8:30 AM",
-            title: "Leave hotel for Mandai",
+            title: "Hotel → Mandai",
             icon: "transport",
             transit: [
               { line: "walk", from: "Hotel", to: "Clarke Quay MRT", note: "~10 min walk" },
               { line: "purple", from: "Clarke Quay", to: "Dhoby Ghaut", direction: "towards Punggol", stops: 1 },
               { line: "red", from: "Dhoby Ghaut", to: "Khatib", direction: "towards Jurong East", stops: 6, interchange: true },
-              { line: "bus", from: "Khatib MRT", to: "Mandai Wildlife Reserve", note: "Mandai Shuttle Bus ~15–20 min" },
+              { line: "bus", from: "Khatib MRT", to: "Mandai Wildlife Reserve", note: "Mandai Shuttle Bus — exit Khatib, follow 'Mandai Shuttle' signs (~15–20 min)" },
             ],
           },
-          { time: "9:45 AM", title: "Singapore Zoo", description: "Explore major zones (~2–2.5 hrs).", icon: "nature", highlight: true, highlightLabel: "Open-concept Zoo" },
-          { time: "12:15 PM", title: "River Wonders", description: "Panda zone + boat ride (~1.5–2 hrs).", icon: "nature" },
-          { time: "2:00 PM", title: "Lunch break", description: "Mandai food court / quick meal.", icon: "food" },
-          { time: "3:00 PM", title: "Bird Paradise", description: "Aviaries + bird shows (~2 hrs).", icon: "nature" },
-          { time: "7:15 PM", title: "Night Safari entry", icon: "ticket" },
-          { time: "7:45 PM", title: "Night Safari Tram Ride", description: "Main highlight — open-air safari after dark.", icon: "sparkle", highlight: true, highlightLabel: "Tram Ride" },
-          { time: "8:30 PM", title: "Walking Trails", description: "Leopard Trail / Fishing Cat Trail.", icon: "nature" },
+          { time: "9:45 AM", title: "Singapore Zoo", description: "Open-concept zones (~2–2.5 hrs).", icon: "nature", highlight: true, highlightLabel: "Open-concept Zoo", mapsUrl: "https://maps.google.com/?q=Singapore+Zoo" },
+          { time: "12:15 PM", title: "River Wonders", description: "Pandas + boat ride (~1.5–2 hrs).", icon: "nature", mapsUrl: "https://maps.google.com/?q=River+Wonders" },
+          { time: "2:00 PM", title: "Lunch break", description: "Mandai food court.", icon: "food" },
+          { time: "3:00 PM", title: "Bird Paradise", description: "Aviaries + bird shows (~2 hrs).", icon: "nature", mapsUrl: "https://maps.google.com/?q=Bird+Paradise" },
+          {
+            time: "7:15 PM",
+            title: "Night Safari entry",
+            icon: "ticket",
+            reminder: "Reach Night Safari by 7:15 PM to clear entry before the tram.",
+            mapsUrl: "https://maps.google.com/?q=Night+Safari",
+          },
+          { time: "7:45 PM", title: "Night Safari Tram Ride", description: "Open-air safari after dark.", icon: "sparkle", highlight: true, highlightLabel: "Tram Ride" },
+          { time: "8:30 PM", title: "Walking Trails", description: "Leopard / Fishing Cat Trail.", icon: "nature", optional: true },
           {
             time: "9:45 PM",
             title: "Return to hotel",
@@ -145,9 +214,10 @@ export const DAYS: Day[] = [
   },
   {
     id: 3,
-    title: "Sentosa Adventure",
-    subtitle: "Universal Studios · Aquarium · Beach · Wings of Time",
-    summary: "Theme park thrills, marine wonder, sunset on Siloso, fireworks finale.",
+    title: "Universal Studios & Aquarium",
+    subtitle: "USS · S.E.A. Aquarium · VivoCity",
+    summary: "Theme park thrills, marine wonder, and a chill waterfront night.",
+    image: day3Img,
     mapEmbed: mapFor("Sentosa Island Singapore Universal Studios"),
     sections: [
       {
@@ -156,7 +226,7 @@ export const DAYS: Day[] = [
         items: [
           {
             time: "9:00 AM",
-            title: "Head to Sentosa",
+            title: "Hotel → Sentosa",
             icon: "transport",
             transit: [
               { line: "walk", from: "Hotel", to: "Clarke Quay MRT", note: "~10 min walk" },
@@ -165,16 +235,78 @@ export const DAYS: Day[] = [
               { line: "monorail", from: "VivoCity", to: "Waterfront Station", direction: "Sentosa Express", stops: 1 },
             ],
           },
-          { time: "10:00 AM", title: "Universal Studios Singapore", description: "Main rides + shows (~6+ hrs, no rush).", icon: "ticket", highlight: true, highlightLabel: "USS" },
-          { time: "4:30 PM", title: "Leave Universal Studios", icon: "rest" },
-          { time: "4:45 PM", title: "S.E.A. Aquarium", description: "Relaxed visit (~1.5–2 hrs).", icon: "nature" },
-          { time: "6:45 PM", title: "Head to Beach", description: "Walk or take Sentosa Beach Shuttle.", icon: "transport" },
-          { time: "7:00 PM", title: "Siloso Beach", description: "Sunset + chill + photos.", icon: "beach" },
-          { time: "7:20 PM", title: "Reach Wings of Time seating", description: "Arrive early for better seats.", icon: "rest" },
-          { time: "7:40 PM", title: "Wings of Time Show", description: "Light + water + fireworks (~20 min).", icon: "show", highlight: true, highlightLabel: "Wings of Time" },
-          { time: "8:15 PM", title: "Dinner", description: "Beachside cafés / food court.", icon: "food" },
+          { time: "10:00 AM", title: "Universal Studios Singapore", description: "Main rides + shows (~6+ hrs).", icon: "ticket", highlight: true, highlightLabel: "USS", mapsUrl: "https://maps.google.com/?q=Universal+Studios+Singapore" },
+          { time: "6:30 PM", title: "Leave Universal Studios", icon: "rest" },
+          { time: "6:45 PM", title: "S.E.A. Aquarium", description: "Relaxed visit (~1.5 hrs).", icon: "nature", mapsUrl: "https://maps.google.com/?q=SEA+Aquarium" },
+          { time: "8:30 PM", title: "VivoCity waterfront", description: "Dinner + chill by the harbor.", icon: "food", mapsUrl: "https://maps.google.com/?q=VivoCity+Singapore" },
           {
-            time: "9:15 PM",
+            time: "10:00 PM",
+            title: "Return to hotel",
+            icon: "transport",
+            transit: [
+              { line: "walk", from: "VivoCity", to: "HarbourFront MRT" },
+              { line: "purple", from: "HarbourFront", to: "Clarke Quay", direction: "towards Punggol", stops: 4 },
+              { line: "walk", from: "Clarke Quay MRT", to: "Hotel", note: "~10 min walk" },
+            ],
+          },
+        ],
+      },
+    ],
+  },
+  {
+    id: 4,
+    title: "IMM & Sentosa Evening",
+    subtitle: "IMM Mall · Cable Car · Siloso · Wings of Time",
+    summary: "Outlet shopping by day, a cable car ride and beachfront fireworks finale.",
+    image: day4Img,
+    mapEmbed: mapFor("IMM Singapore Sentosa Cable Car Siloso Beach"),
+    sections: [
+      {
+        label: "Morning – Afternoon",
+        range: "10:00 AM – 3:30 PM",
+        items: [
+          {
+            time: "10:00 AM",
+            title: "Hotel → IMM",
+            icon: "transport",
+            transit: [
+              { line: "walk", from: "Hotel", to: "Clarke Quay MRT" },
+              { line: "purple", from: "Clarke Quay", to: "Outram Park", direction: "towards HarbourFront", stops: 2 },
+              { line: "green", from: "Outram Park", to: "Jurong East", direction: "towards Tuas Link", stops: 6, interchange: true },
+              { line: "walk", from: "Jurong East MRT", to: "IMM Mall", note: "~5 min walk" },
+            ],
+          },
+          { time: "10:30 AM", title: "IMM Mall", description: "Singapore's biggest outlet mall.", icon: "shopping", mapsUrl: "https://maps.google.com/?q=IMM+Singapore" },
+          { time: "1:30 PM", title: "Lunch at IMM", icon: "food" },
+          {
+            time: "3:00 PM",
+            title: "IMM → HarbourFront",
+            icon: "transport",
+            transit: [
+              { line: "walk", from: "IMM Mall", to: "Jurong East MRT" },
+              { line: "green", from: "Jurong East", to: "Outram Park", direction: "towards Pasir Ris", stops: 6 },
+              { line: "purple", from: "Outram Park", to: "HarbourFront", direction: "towards HarbourFront", stops: 2, interchange: true },
+            ],
+          },
+        ],
+      },
+      {
+        label: "Evening",
+        range: "4:30 PM – 10:30 PM",
+        items: [
+          { time: "4:30 PM", title: "Singapore Cable Car", description: "Mount Faber → Sentosa with harbor views.", icon: "ticket", highlight: true, highlightLabel: "Cable Car", mapsUrl: "https://maps.google.com/?q=Singapore+Cable+Car" },
+          { time: "6:00 PM", title: "Siloso Beach", description: "Sunset + chill + photos.", icon: "beach", mapsUrl: "https://maps.google.com/?q=Siloso+Beach" },
+          {
+            time: "7:20 PM",
+            title: "Wings of Time seating",
+            description: "Arrive early for better seats.",
+            icon: "rest",
+            reminder: "Reach the Wings of Time seating area by 7:20 PM.",
+          },
+          { time: "7:40 PM", title: "Wings of Time Show", description: "Light + water + fireworks (~20 min).", icon: "show", highlight: true, highlightLabel: "Wings of Time", mapsUrl: "https://maps.google.com/?q=Wings+of+Time" },
+          { time: "8:15 PM", title: "Dinner at the beach", description: "Beachside cafés / food court.", icon: "food" },
+          {
+            time: "9:30 PM",
             title: "Return to hotel",
             icon: "transport",
             transit: [
@@ -189,145 +321,92 @@ export const DAYS: Day[] = [
     ],
   },
   {
-    id: 4,
-    title: "Skyline & Shopping",
-    subtitle: "Singapore Flyer · Bugis · Orchard Road",
-    summary: "Sky-high views by day, neon street markets and Orchard glamour by night.",
-    mapEmbed: mapFor("Singapore Flyer, Bugis, Orchard Road Singapore"),
-    sections: [
-      {
-        label: "Morning – Afternoon",
-        range: "10:00 AM – 2:30 PM",
-        items: [
-          {
-            time: "10:00 AM",
-            title: "Head to Singapore Flyer",
-            icon: "transport",
-            transit: [
-              { line: "walk", from: "Hotel", to: "Clarke Quay MRT", note: "~10 min walk" },
-              { line: "purple", from: "Clarke Quay", to: "Dhoby Ghaut", direction: "towards Punggol", stops: 1 },
-              { line: "yellow", from: "Dhoby Ghaut", to: "Promenade", direction: "towards Promenade", stops: 2, interchange: true },
-              { line: "walk", from: "Promenade MRT", to: "Singapore Flyer", note: "~5–7 min walk" },
-            ],
-          },
-          { time: "10:30 AM", title: "Singapore Flyer", description: "Observation ride + queue (~30–40 min).", icon: "ticket", highlight: true, highlightLabel: "Skyline View" },
-          { time: "11:30 AM", title: "Marina Bay Walk", description: "Waterfront views + photos. Optional MBS mall.", icon: "nature" },
-          { time: "1:00 PM", title: "Lunch", description: "Marina Bay food court.", icon: "food" },
-          {
-            time: "2:30 PM",
-            title: "Return to hotel · rest",
-            icon: "transport",
-            transit: [
-              { line: "walk", from: "Marina Bay", to: "Promenade MRT" },
-              { line: "yellow", from: "Promenade", to: "Dhoby Ghaut", direction: "towards Dhoby Ghaut", stops: 2 },
-              { line: "purple", from: "Dhoby Ghaut", to: "Clarke Quay", direction: "towards HarbourFront", stops: 1, interchange: true },
-              { line: "walk", from: "Clarke Quay MRT", to: "Hotel", note: "~10 min walk" },
-            ],
-          },
-        ],
-      },
-      {
-        label: "Evening",
-        range: "6:00 PM – 10:30 PM",
-        items: [
-          {
-            time: "6:00 PM",
-            title: "Head to Bugis Street",
-            icon: "transport",
-            transit: [
-              { line: "walk", from: "Hotel", to: "Clarke Quay MRT", note: "~10 min walk" },
-              { line: "purple", from: "Clarke Quay", to: "Dhoby Ghaut", direction: "towards Punggol", stops: 1 },
-              { line: "blue", from: "Dhoby Ghaut", to: "Bugis", direction: "towards Expo", stops: 2, interchange: true },
-            ],
-          },
-          { time: "6:30 PM", title: "Bugis Street", description: "Street shopping + local vibe (~1.5 hrs).", icon: "shopping" },
-          {
-            time: "8:00 PM",
-            title: "Bugis → Orchard",
-            icon: "transport",
-            transit: [
-              { line: "blue", from: "Bugis", to: "Newton", direction: "towards Bukit Panjang", stops: 2 },
-              { line: "red", from: "Newton", to: "Orchard", direction: "towards Jurong East", stops: 1, interchange: true },
-            ],
-          },
-          { time: "8:30 PM", title: "Orchard Road", description: "Malls + street lights + nightlife.", icon: "shopping" },
-          { time: "9:30 PM", title: "Dinner", icon: "food" },
-          {
-            time: "10:00 PM",
-            title: "Return to hotel",
-            icon: "transport",
-            transit: [
-              { line: "red", from: "Orchard", to: "Dhoby Ghaut", direction: "towards Marina South Pier", stops: 1 },
-              { line: "purple", from: "Dhoby Ghaut", to: "Clarke Quay", direction: "towards HarbourFront", stops: 1, interchange: true },
-              { line: "walk", from: "Clarke Quay MRT", to: "Hotel", note: "~10 min walk" },
-            ],
-          },
-        ],
-      },
-    ],
-  },
-  {
     id: 5,
-    title: "Nature, Culture & Rooftop Finale",
-    subtitle: "Gardens · Little India · River Cruise · Rooftop Dinner",
-    summary: "A relaxed wind-down with rooftop dining as the grand finale.",
-    mapEmbed: mapFor("Gardens by the Bay, Little India, Clarke Quay Singapore"),
+    title: "Botanic, Marina, Orchard & Bugis",
+    subtitle: "Botanic Gardens · Gardens by the Bay · Orchard · Bugis",
+    summary: "A relaxed wind-down through gardens and shopping streets, ending with airport transfer.",
+    image: day5Img,
+    mapEmbed: mapFor("Singapore Botanic Gardens, Orchard Road, Bugis"),
     sections: [
       {
         label: "Morning",
-        range: "9:30 AM – 1:30 PM",
+        range: "9:00 AM – 1:00 PM",
         items: [
           {
-            time: "9:30 AM",
-            title: "Head to Gardens by the Bay",
+            time: "9:00 AM",
+            title: "Havelock → Botanic Gardens",
             icon: "transport",
             transit: [
-              { line: "walk", from: "Hotel", to: "Clarke Quay MRT", note: "~10 min walk" },
-              { line: "purple", from: "Clarke Quay", to: "Dhoby Ghaut", direction: "towards Punggol", stops: 1 },
-              { line: "yellow", from: "Dhoby Ghaut", to: "Bayfront", direction: "towards Marina Bay", stops: 2, interchange: true },
-              { line: "walk", from: "Bayfront MRT", to: "Gardens by the Bay" },
+              { line: "walk", from: "Hotel", to: "Havelock MRT", note: "~8 min walk" },
+              { line: "blue", from: "Havelock", to: "Newton", direction: "towards Bukit Panjang", stops: 4 },
+              { line: "red", from: "Newton", to: "Orchard", direction: "towards Jurong East", stops: 1, interchange: true },
+              { line: "yellow", from: "Orchard → Botanic Gardens", to: "Botanic Gardens", direction: "via Circle Line", stops: 2, interchange: true, note: "Walk to Botanic Gardens MRT (Circle Line)" },
             ],
           },
-          { time: "10:00 AM", title: "Explore Gardens (slow & relaxed)", description: "Cloud Forest (less crowd in morning), Flower Dome, outdoor gardens & lake walk.", icon: "nature" },
-          { time: "1:00 PM", title: "Lunch near Marina Bay", icon: "food" },
-          {
-            time: "2:30 PM",
-            title: "Return to hotel · rest",
-            icon: "transport",
-            transit: [
-              { line: "yellow", from: "Bayfront", to: "Dhoby Ghaut", direction: "towards Dhoby Ghaut", stops: 2 },
-              { line: "purple", from: "Dhoby Ghaut", to: "Clarke Quay", direction: "towards HarbourFront", stops: 1, interchange: true },
-            ],
-          },
+          { time: "9:45 AM", title: "Singapore Botanic Gardens", description: "Orchid Garden + relaxed walk.", icon: "nature", highlight: true, highlightLabel: "UNESCO Garden", mapsUrl: "https://maps.google.com/?q=Singapore+Botanic+Gardens" },
+          { time: "12:30 PM", title: "Lunch", icon: "food" },
         ],
       },
       {
-        label: "Evening",
-        range: "5:30 PM – 10:30 PM",
+        label: "Afternoon",
+        range: "1:30 PM – 5:00 PM",
         items: [
           {
-            time: "5:30 PM",
-            title: "Head to Little India",
+            time: "1:30 PM",
+            title: "Botanic → Bayfront",
             icon: "transport",
             transit: [
-              { line: "walk", from: "Hotel", to: "Clarke Quay MRT" },
-              { line: "purple", from: "Clarke Quay", to: "Dhoby Ghaut", direction: "towards Punggol", stops: 1 },
-              { line: "blue", from: "Dhoby Ghaut", to: "Little India", direction: "towards Bukit Panjang", stops: 2, interchange: true },
+              { line: "yellow", from: "Botanic Gardens", to: "Promenade", direction: "towards Marina Bay", stops: 6 },
+              { line: "yellow", from: "Promenade", to: "Bayfront", direction: "towards Marina Bay", stops: 1 },
             ],
           },
-          { time: "6:00 PM", title: "Little India", description: "Street shopping + temples. Optional: Mustafa Centre.", icon: "shopping" },
+          { time: "2:00 PM", title: "Gardens by the Bay (encore)", description: "Outdoor gardens + lake walk.", icon: "nature", mapsUrl: "https://maps.google.com/?q=Gardens+by+the+Bay" },
           {
-            time: "7:15 PM",
+            time: "4:00 PM",
+            title: "Bayfront → Orchard",
+            icon: "transport",
+            transit: [
+              { line: "yellow", from: "Bayfront", to: "Dhoby Ghaut", direction: "towards Dhoby Ghaut", stops: 2 },
+              { line: "red", from: "Dhoby Ghaut", to: "Orchard", direction: "towards Jurong East", stops: 1, interchange: true },
+            ],
+          },
+          { time: "4:15 PM", title: "Orchard Road", description: "Malls + street lights.", icon: "shopping", mapsUrl: "https://maps.google.com/?q=Orchard+Road" },
+        ],
+      },
+      {
+        label: "Evening & Departure",
+        range: "5:00 PM – 6:20 PM",
+        items: [
+          {
+            time: "5:00 PM",
+            title: "Orchard → Bugis",
+            icon: "transport",
+            transit: [
+              { line: "red", from: "Orchard", to: "Dhoby Ghaut", direction: "towards Marina South Pier", stops: 1 },
+              { line: "blue", from: "Dhoby Ghaut", to: "Bugis", direction: "towards Expo", stops: 2, interchange: true },
+            ],
+          },
+          { time: "5:15 PM", title: "Bugis Street", description: "Last-minute street shopping.", icon: "shopping", mapsUrl: "https://maps.google.com/?q=Bugis+Street" },
+          {
+            time: "5:50 PM",
             title: "Return to Clarke Quay",
             icon: "transport",
             transit: [
-              { line: "blue", from: "Little India", to: "Dhoby Ghaut", direction: "towards Bugis", stops: 2 },
+              { line: "blue", from: "Bugis", to: "Promenade", direction: "towards Bukit Panjang", stops: 1 },
+              { line: "yellow", from: "Promenade", to: "Dhoby Ghaut", direction: "towards Dhoby Ghaut", stops: 2, interchange: true },
               { line: "purple", from: "Dhoby Ghaut", to: "Clarke Quay", direction: "towards HarbourFront", stops: 1, interchange: true },
             ],
           },
-          { time: "7:30 PM", title: "Singapore River Cruise", description: "Night boat ride (~40 min).", icon: "nature", highlight: true, highlightLabel: "River Cruise" },
-          { time: "8:45 PM", title: "Rooftop Dinner", description: "CÉ LA VI or Level 33 — the grand finale.", icon: "food", highlight: true, highlightLabel: "Main Highlight" },
-          { time: "10:30 PM", title: "Return to hotel", icon: "hotel" },
+          {
+            time: "6:20 PM",
+            title: "Airport Transfer",
+            description: "Leave hotel for Changi Airport.",
+            icon: "transport",
+            highlight: true,
+            highlightLabel: "Departure",
+            reminder: "Leave by 6:20 PM sharp to make the flight comfortably.",
+            mapsUrl: "https://maps.google.com/?q=Changi+Airport+Singapore",
+          },
         ],
       },
     ],
